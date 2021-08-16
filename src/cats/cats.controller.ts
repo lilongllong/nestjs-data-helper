@@ -1,13 +1,29 @@
-import { Controller, Get, Post, Header, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Header,
+  Param,
+  Body,
+  Query,
+  HttpException,
+  HttpStatus,
+  UseFilters,
+} from '@nestjs/common';
 import { Request, Response as ResponseType } from 'express';
 import { CatsCreateDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
 import { ICat } from './interfaces/cats.interface';
 import { AppService } from '../app/app.service';
+import { ForbiddenException } from '../exceptions/forbidden.exception';
+import { HttpExceptionFilter } from '../filters/http-exception.filter';
 
 @Controller('cats')
 export class CatsController {
-  constructor(private catService: CatsService, private appService: AppService) {}
+  constructor(
+    private catService: CatsService,
+    private appService: AppService,
+  ) {}
 
   @Post('create')
   @Header('Cache-Control', 'none')
@@ -38,5 +54,22 @@ export class CatsController {
         age: 10,
       },
     };
+  }
+
+  @Get('httpsError')
+  @UseFilters(new HttpExceptionFilter())
+  checkErrors(@Query() querry: { errorCode: number }) {
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: 'This is a custom message',
+      },
+      HttpStatus.FORBIDDEN,
+    );
+  }
+  @Get('httpsError/forbidden')
+  @UseFilters(new HttpExceptionFilter())
+  checkForbiddenErrors() {
+    throw new ForbiddenException();
   }
 }
