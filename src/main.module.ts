@@ -1,10 +1,17 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppModule } from './app/app.module';
 import { CatsModule } from './cats/cats.module';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { CatsLoggerMiddleware } from './middleware/catsLogger.middleware';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -25,6 +32,17 @@ import { UsersModule } from './users/users.module';
   controllers: [],
   providers: [],
 })
-export class MainModule {
+export class MainModule implements NestModule {
   constructor(private connection: Connection) {}
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CatsLoggerMiddleware)
+      .exclude(
+        { path: 'cats/find', method: RequestMethod.GET },
+        { path: 'cats/find', method: RequestMethod.POST },
+      )
+      .forRoutes({ path: 'cats', method: RequestMethod.ALL });
+
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
 }
