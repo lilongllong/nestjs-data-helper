@@ -9,6 +9,8 @@ import {
   HttpException,
   HttpStatus,
   UseFilters,
+  UsePipes,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Request, Response as ResponseType } from 'express';
 import { CatsCreateDto } from './dto/cats.dto';
@@ -17,6 +19,8 @@ import { ICat } from './interfaces/cats.interface';
 import { AppService } from '../app/app.service';
 import { ForbiddenException } from '../exceptions/forbidden.exception';
 import { HttpExceptionFilter } from '../filters/http-exception.filter';
+import { TimeValidationPipe } from '../pipes/time.validation.pipe';
+// import { JoiValidationPipe } from '../pipes/joi.validationPipe';
 
 @Controller('cats')
 export class CatsController {
@@ -27,24 +31,28 @@ export class CatsController {
 
   @Post('create')
   @Header('Cache-Control', 'none')
-  async create(@Body() body: CatsCreateDto): Promise<string> {
+  // @UsePipes(new JoiValidationPipe(createCatSchema))
+  async create(
+    @Body(new TimeValidationPipe()) body: CatsCreateDto,
+  ): Promise<string> {
     await this.catService.create(body);
     return 'this action creates a new cat';
   }
 
   @Get('findAll')
-  findAll(): ICat[] {
+  findAll(@Query('id', ParseIntPipe) id: number): ICat[] {
+    console.log(typeof id);
     return this.catService.findAll();
   }
 
   @Get('findOne/:id')
-  async findOne(@Param('id') id): Promise<{
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<{
     retcode: number;
     msg: string;
     data: { id: number; age: number; name: string };
   }> {
     const text = this.appService.getHello();
-    console.log(text);
+    console.log(typeof id);
     return {
       retcode: 0,
       msg: text,
