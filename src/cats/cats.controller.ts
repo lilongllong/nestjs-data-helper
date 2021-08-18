@@ -41,7 +41,6 @@ export class CatsController {
 
   @Get('findAll')
   findAll(@Query('id', ParseIntPipe) id: number): ICat[] {
-    console.log(typeof id);
     return this.catService.findAll();
   }
 
@@ -52,7 +51,6 @@ export class CatsController {
     data: { id: number; age: number; name: string };
   }> {
     const text = this.appService.getHello();
-    console.log(typeof id);
     return {
       retcode: 0,
       msg: text,
