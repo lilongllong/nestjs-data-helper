@@ -8,6 +8,7 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { config } from './helpers/config';
 import { AppModule } from './app/app.module';
 import { CatsModule } from './cats/cats.module';
 import { UsersModule } from './users/users.module';
@@ -16,9 +17,13 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
   imports: [
-    AppModule,
-    CatsModule,
-    UsersModule,
+    // 配置模块
+    ConfigModule.forRoot({
+      ignoreEnvFile: true,
+      // 全局注入配置
+      isGlobal: true,
+      load: [() => config],
+    }),
     // 数据库ORM模块
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,6 +44,9 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
       },
       inject: [ConfigService],
     }),
+    AppModule,
+    CatsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

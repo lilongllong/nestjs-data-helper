@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { MainModule } from './main.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { setupSwagger } from './helpers/swagger';
+import { getConfig } from './helpers/config';
 // import { LoggerMiddleware } from './middleware/logger.middleware';
 
 async function bootstrap() {
@@ -12,4 +13,4 @@ async function bootstrap() {
   setupSwagger(app);
   await app.listen(3000);
 }
-bootstrap();
+getConfig().then(() => bootstrap());
