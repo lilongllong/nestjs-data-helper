@@ -16,10 +16,10 @@ import { Request, Response as ResponseType } from 'express';
 import { CatsCreateDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
 import { ICat } from './interfaces/cats.interface';
-import { AppService } from '../app/app.service';
-import { ForbiddenException } from '../exceptions/forbidden.exception';
-import { HttpExceptionFilter } from '../filters/http-exception.filter';
-import { TimeValidationPipe } from '../pipes/time.validation.pipe';
+import { AppService } from '../app.service';
+import { ForbiddenException } from '../../exceptions/forbidden.exception';
+import { HttpExceptionFilter } from '../../filters/http-exception.filter';
+import { TimeValidationPipe } from '../../pipes/time.validation.pipe';
 // import { JoiValidationPipe } from '../pipes/joi.validationPipe';
 
 @Controller('cats')

@@ -8,12 +8,12 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { config } from './helpers/config';
-import { AppModule } from './app/app.module';
+import { config } from '../helpers/config';
+import { HomeModule } from './home/home.module';
 import { CatsModule } from './cats/cats.module';
 import { UsersModule } from './users/users.module';
-import { CatsLoggerMiddleware } from './middleware/catsLogger.middleware';
-import { LoggerMiddleware } from './middleware/logger.middleware';
+import { CatsLoggerMiddleware } from '../middleware/catsLogger.middleware';
+import { LoggerMiddleware } from '../middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -44,7 +44,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
       },
       inject: [ConfigService],
     }),
-    AppModule,
+    HomeModule,
     CatsModule,
     UsersModule,
   ],
