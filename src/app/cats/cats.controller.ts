@@ -16,7 +16,7 @@ import { Request, Response as ResponseType } from 'express';
 import { CatsCreateDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
 import { ICat } from './interfaces/cats.interface';
-import { AppService } from '../app.service';
+import { HomeService } from '../home/home.service';
 import { ForbiddenException } from '../../exceptions/forbidden.exception';
 import { HttpExceptionFilter } from '../../filters/http-exception.filter';
 import { TimeValidationPipe } from '../../pipes/time.validation.pipe';
@@ -26,7 +26,7 @@ import { TimeValidationPipe } from '../../pipes/time.validation.pipe';
 export class CatsController {
   constructor(
     private catService: CatsService,
-    private appService: AppService,
+    private homeService: HomeService,
   ) {}
 
   @Post('create')
@@ -50,7 +50,7 @@ export class CatsController {
     msg: string;
     data: { id: number; age: number; name: string };
   }> {
-    const text = this.appService.getHello();
+    const text = this.homeService.getHello();
     return {
       retcode: 0,
       msg: text,
