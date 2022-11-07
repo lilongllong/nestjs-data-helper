@@ -9,6 +9,8 @@ export const stopSchedule = () => {
 };
 
 export const setupSchedule = (app: INestApplication) => {
+  // const roomService = app.get(XingzhoushenfangService);
+  // roomService.queryCommunityData();
   schedule.scheduleJob('0 0 0 * * *', function () {
     // 获取service进行数据保存
     const roomService = app.get(XingzhoushenfangService);

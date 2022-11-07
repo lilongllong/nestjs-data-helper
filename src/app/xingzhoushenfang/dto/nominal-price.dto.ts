@@ -26,3 +26,9 @@ export class NominalPriceDto {
   changeRate: number; // 字符串转数字
   changeDay: string;
 }
+
+export class CommunityDto {
+  zoneName: string;
+  districtname: string;
+  communityName: string;
+}

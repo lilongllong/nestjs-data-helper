@@ -75,3 +75,23 @@ export class NominalPriceDB {
   @CreateDateColumn()
   createTime: Date;
 }
+
+@Entity()
+export class CommunityDB {
+  @PrimaryGeneratedColumn()
+  id: number;
+  @Column({
+    type: 'text',
+  })
+  communityName: string;
+  @Column({
+    type: 'text',
+  })
+  districtname: string;
+  @Column({
+    type: 'text',
+  })
+  zoneName: string;
+  @CreateDateColumn()
+  createTime: Date;
+}

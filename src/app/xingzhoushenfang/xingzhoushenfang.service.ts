@@ -2,9 +2,9 @@ import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 
-import { NominalPriceDB } from './entity/nominal-price.entity';
-import { getStaredEstateData } from './apis/index';
-import { NominalPriceDto } from './dto/nominal-price.dto';
+import { NominalPriceDB, CommunityDB } from './entity/nominal-price.entity';
+import { getStaredEstateData, getAllEstates } from './apis/index';
+import { NominalPriceDto, CommunityDto } from './dto/nominal-price.dto';
 import { doesNotMatch } from 'assert';
 
 @Injectable()
@@ -12,6 +12,8 @@ export class XingzhoushenfangService {
   constructor(
     @InjectRepository(NominalPriceDB)
     private NominalPriceDb: Repository<NominalPriceDB>,
+    @InjectRepository(CommunityDB)
+    private communityDb: Repository<CommunityDB>,
     private connection: Connection,
   ) {}
   async createMany(prices: NominalPriceDto[]) {
@@ -56,6 +58,35 @@ export class XingzhoushenfangService {
     const data = await getStaredEstateData();
     const formatData = data.reduce((target, curr) => [...target, ...curr]);
     const result = await this.createMany(formatData);
+    return result;
+  }
+  async createCommunityDb(communities: CommunityDto[]) {
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      for (let index = 0; index < communities.length; index++) {
+        const item = communities[index];
+        const db = new CommunityDB();
+        db.communityName = item.communityName || '';
+        db.zoneName = item.zoneName || '';
+        db.districtname = item.districtname || '';
+        await queryRunner.manager.save(db);
+      }
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      console.log(error, 'error');
+      await queryRunner.rollbackTransaction();
+      return false;
+    } finally {
+      await queryRunner.release();
+    }
+    return true;
+  }
+  async queryCommunityData() {
+    const data = await getAllEstates();
+    console.log(data, 'data');
+    const result = await this.createCommunityDb(data);
     return result;
   }
 }
