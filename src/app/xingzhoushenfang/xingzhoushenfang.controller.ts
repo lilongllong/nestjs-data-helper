@@ -12,4 +12,12 @@ export class XingzhoushenfangController {
     // 获得笋盘
     return [];
   }
+  @Get('job/nominal_price')
+  async startNominalPriceScheduleJob() {
+    this.xingzhoushenfangService.updateAllNominalPriceScheduleJob();
+    return {
+      code: 0,
+      message: '成功启动抓取房价的脚本任务',
+    };
+  }
 }
