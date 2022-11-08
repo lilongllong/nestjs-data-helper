@@ -76,7 +76,7 @@ export class XingzhoushenfangService {
     try {
       for (let index = 0; index < prices.length; index++) {
         const item = prices[index];
-        const oldData = this.salesDb.findOne({ ref_id: item.ref_id });
+        const oldData = await this.salesDb.findOne({ ref_id: item.ref_id });
         if (oldData) {
           continue;
         }
@@ -163,7 +163,11 @@ export class XingzhoushenfangService {
     const communityNames = data[0].map((item) =>
       formatCommunityName(item.communityName),
     );
-    for (let index = 0; index < communityNames.length; index++) {
+    for (
+      let index = communityNames.indexOf('帝景园');
+      index < communityNames.length;
+      index++
+    ) {
       const res = await getSalesPriceItem({ keyWord: communityNames[index] });
       await this.createManySaleDB(res);
       console.log(communityNames[index], res);

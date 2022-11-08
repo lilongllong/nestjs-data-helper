@@ -19,7 +19,7 @@ export const getNominalPriceItem = async (params: {
 }): Promise<NominalPriceDto[]> => {
   const delay = () =>
     new Promise((resolve) => {
-      setTimeout(resolve, Math.random() * 10000);
+      setTimeout(resolve, 10000 + Math.random() * 10000);
     });
   await delay();
   const res = await axiosInstance.request({
@@ -49,11 +49,18 @@ export const getSalesPriceItem = async (params: {
 }): Promise<SalesDto[]> => {
   const delay = () =>
     new Promise((resolve) => {
-      setTimeout(resolve, Math.random() * 10000);
+      setTimeout(resolve, 10000 + Math.random() * 10000);
     });
   await delay();
   const res = await axiosInstance.request({
     ...SALE_PRICE_URL,
+    headers: {
+      Host: 'www.xzsfbj.com.cn',
+      Origin: 'https://www.xzsfbj.com.cn',
+      Referer: 'https://www.xzsfbj.com.cn/web/h5.html',
+      'User-Agent':
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
+    },
     data: params,
   });
   if (res.status === 200 && res.data?.errCode === 0) {
