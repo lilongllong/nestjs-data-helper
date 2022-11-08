@@ -17,6 +17,11 @@ import {
 export const getNominalPriceItem = async (params: {
   keyWord: string;
 }): Promise<NominalPriceDto[]> => {
+  const delay = () =>
+    new Promise((resolve) => {
+      setTimeout(resolve, Math.random() * 10000);
+    });
+  await delay();
   const res = await axiosInstance.request({
     ...NOMINAL_PRICE_URL,
     params: params,
@@ -42,6 +47,11 @@ export const getNominalPriceItem = async (params: {
 export const getSalesPriceItem = async (params: {
   keyWord: string;
 }): Promise<SalesDto[]> => {
+  const delay = () =>
+    new Promise((resolve) => {
+      setTimeout(resolve, Math.random() * 10000);
+    });
+  await delay();
   const res = await axiosInstance.request({
     ...SALE_PRICE_URL,
     data: params,
@@ -110,6 +120,11 @@ export const getCommunityByArea = async (params: { area: string }) => {
   if (firstData.list?.length > 0 && firstData.total > 0) {
     let page = 1;
     while (page * 10 < firstData.total) {
+      const delay = () =>
+        new Promise((resolve) => {
+          setTimeout(resolve, Math.random() * 10000);
+        });
+      await delay();
       const res = await getCommunity({
         area: params.area,
         page,
