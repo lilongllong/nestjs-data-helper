@@ -9,8 +9,29 @@ import {
   ESTATE_QUERY_URL,
 } from '../constants';
 
-export const getNominalPriceItem = (params: { keyWord: string }) => {
-  return axiosInstance.request({ ...NOMINAL_PRICE_URL, params: params });
+export const getNominalPriceItem = async (params: {
+  keyWord: string;
+}): Promise<NominalPriceDto[]> => {
+  const res = await axiosInstance.request({
+    ...NOMINAL_PRICE_URL,
+    params: params,
+  });
+  if (res.status === 200) {
+    return (res.data || []).map((subItem: NominalPriceDto) => {
+      const data = {
+        ...subItem,
+        ref_id: subItem.id,
+        changeRate: Number(subItem.changeRate),
+        refScale: Number(subItem.refScale),
+        unitPrice: Number(subItem.unitPrice),
+        houseId: String(subItem.houseId),
+      } as NominalPriceDto;
+      delete data.id;
+      return data;
+    });
+  } else {
+    return [];
+  }
 };
 
 export const getCommunity = async (params: any) => {
@@ -84,24 +105,7 @@ export const getStaredEstateData = async function (): Promise<
     return getNominalPriceItem({ keyWord: item });
   });
   const datas = await Promise.all(promises);
-  return (datas || []).map((item: AxiosResponse<NominalPriceDto[]>) => {
-    if (item.status === 200) {
-      return (item.data || []).map((subItem: NominalPriceDto) => {
-        const data = {
-          ...subItem,
-          ref_id: subItem.id,
-          changeRate: Number(subItem.changeRate),
-          refScale: Number(subItem.refScale),
-          unitPrice: Number(subItem.unitPrice),
-          houseId: String(subItem.houseId),
-        } as NominalPriceDto;
-        delete data.id;
-        return data;
-      });
-    } else {
-      return [];
-    }
-  });
+  return datas;
 };
 
 export const getAllEstates = async function (): Promise<CommunityDto[]> {

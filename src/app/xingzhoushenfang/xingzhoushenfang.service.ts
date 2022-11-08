@@ -3,9 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 
 import { NominalPriceDB, CommunityDB } from './entity/nominal-price.entity';
-import { getStaredEstateData, getAllEstates } from './apis/index';
+import {
+  getStaredEstateData,
+  getAllEstates,
+  getNominalPriceItem,
+} from './apis/index';
 import { NominalPriceDto, CommunityDto } from './dto/nominal-price.dto';
-import { doesNotMatch } from 'assert';
+import { formatCommunityName } from 'src/utils/index';
 
 @Injectable()
 export class XingzhoushenfangService {
@@ -85,8 +89,27 @@ export class XingzhoushenfangService {
   }
   async queryCommunityData() {
     const data = await getAllEstates();
-    console.log(data, 'data');
     const result = await this.createCommunityDb(data);
     return result;
+  }
+  async queryCommunityFromDb(): Promise<[CommunityDB[], number]> {
+    try {
+      const data = await this.communityDb.findAndCount();
+      return data;
+    } catch (error) {
+      console.log(error, 'error');
+      return [[], 0];
+    }
+  }
+  async updateAllNominalPriceScheduleJob() {
+    const data: [CommunityDB[], number] = await this.queryCommunityFromDb();
+    const communityNames = data[0].map((item) =>
+      formatCommunityName(item.communityName),
+    );
+    for (let index = 0; index < communityNames.length; index++) {
+      const res = await getNominalPriceItem({ keyWord: communityNames[index] });
+      await this.createMany(res);
+      console.log(communityNames[index], res);
+    }
   }
 }

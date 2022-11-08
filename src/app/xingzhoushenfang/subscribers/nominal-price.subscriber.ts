@@ -18,6 +18,6 @@ export class NominalPriceSubscriber implements EntitySubscriberInterface {
   afterInsert(event: InsertEvent<any>): void | Promise<any> {
     // ** 检查是否为最低价，如果是则进行推送，
     // ** 是否进行大幅度的降价，如果则进行推送
-    console.log(event, '添加时间');
+    // console.log(event, '添加时间');
   }
 }
