@@ -15,7 +15,7 @@ export const NOMINAL_PRICE_URL = {
 };
 
 export const SALE_PRICE_URL = {
-  urls: 'https://www.xzsfbj.com.cn/getDeal',
+  url: 'https://www.xzsfbj.com.cn/getDeal',
   method: 'POST',
 };
 

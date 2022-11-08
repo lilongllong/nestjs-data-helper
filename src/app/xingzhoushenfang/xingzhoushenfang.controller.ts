@@ -20,4 +20,12 @@ export class XingzhoushenfangController {
       message: '成功启动抓取房价的脚本任务',
     };
   }
+  @Get('job/sales_price')
+  async startSalesPriceScheduleJob() {
+    this.xingzhoushenfangService.updateAllNominalPriceScheduleJob();
+    return {
+      code: 0,
+      message: '成功启动抓取房价的脚本任务',
+    };
+  }
 }

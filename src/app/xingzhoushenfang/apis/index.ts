@@ -1,12 +1,17 @@
 import { AxiosResponse } from 'axios';
 import axiosInstance from 'src/utils/axiosInstance';
-import { NominalPriceDto, CommunityDto } from '../dto/nominal-price.dto';
+import {
+  NominalPriceDto,
+  CommunityDto,
+  SalesDto,
+} from '../dto/nominal-price.dto';
 
 import {
   NOMINAL_PRICE_URL,
   HOUSING_ESTATE,
   AREA_LIST,
   ESTATE_QUERY_URL,
+  SALE_PRICE_URL,
 } from '../constants';
 
 export const getNominalPriceItem = async (params: {
@@ -26,6 +31,30 @@ export const getNominalPriceItem = async (params: {
         unitPrice: Number(subItem.unitPrice),
         houseId: String(subItem.houseId),
       } as NominalPriceDto;
+      delete data.id;
+      return data;
+    });
+  } else {
+    return [];
+  }
+};
+
+export const getSalesPriceItem = async (params: {
+  keyWord: string;
+}): Promise<SalesDto[]> => {
+  const res = await axiosInstance.request({
+    ...SALE_PRICE_URL,
+    data: params,
+  });
+  if (res.status === 200 && res.data?.errCode === 0) {
+    return (res.data.data || []).map((subItem: SalesDto) => {
+      const data = {
+        ...subItem,
+        ref_id: subItem.id,
+        unitPrice:
+          (subItem.unitPrice as any) === '***' ? 0 : Number(subItem.unitPrice),
+        price: (subItem.price as any) === '***' ? 0 : Number(subItem.price),
+      } as SalesDto;
       delete data.id;
       return data;
     });

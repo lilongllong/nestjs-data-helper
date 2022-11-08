@@ -32,3 +32,21 @@ export class CommunityDto {
   districtname: string;
   communityName: string;
 }
+
+/**
+ * {"id":101795,"area":"宝安区","district":"西乡","name":"万象新天","roomCount":2,"acreage":63,"price":476,"cycle":32,"site":"贝壳","date":"2022-08-14","createTime":1667185925305,"unitPrice":"7.56"}
+ */
+export class SalesDto {
+  id?: number;
+  ref_id: number;
+  area: string;
+  district: string;
+  name: string;
+  roomCount: number;
+  acreage: number;
+  price: number;
+  cycle: number;
+  date: string;
+  unitPrice: number;
+  site: string;
+}
