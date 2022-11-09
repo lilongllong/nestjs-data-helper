@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { NominalPriceDto } from './dto/nominal-price.dto';
 import { XingzhoushenfangService } from './xingzhoushenfang.service';
 
@@ -8,9 +8,20 @@ export class XingzhoushenfangController {
     private readonly xingzhoushenfangService: XingzhoushenfangService,
   ) {}
   @Get('sunpan/get')
-  async getSunpan(): Promise<NominalPriceDto[]> {
+  async getSunpan(
+    @Query() query: { name: string },
+  ): Promise<{ code: number; data: any }> {
     // 获得笋盘
-    return [];
+    const sales = await this.xingzhoushenfangService.querySalesDb({
+      name: query.name,
+    });
+    const prices = await this.xingzhoushenfangService.queryNominalPriceDb({
+      estate: query.name,
+    });
+    return {
+      code: 0,
+      data: { sales, prices },
+    };
   }
   @Get('job/nominal_price')
   async startNominalPriceScheduleJob() {

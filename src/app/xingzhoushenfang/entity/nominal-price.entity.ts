@@ -104,6 +104,9 @@ export class SalesDB {
     default: 0,
   })
   ref_id: number;
+  @Column({
+    type: 'text',
+  })
   area: string;
   @Column({
     type: 'text',

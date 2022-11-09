@@ -49,7 +49,7 @@ export const getSalesPriceItem = async (params: {
 }): Promise<SalesDto[]> => {
   const delay = () =>
     new Promise((resolve) => {
-      setTimeout(resolve, 10000 + Math.random() * 10000);
+      setTimeout(resolve, 5000 + Math.random() * 5000);
     });
   await delay();
   const res = await axiosInstance.request({

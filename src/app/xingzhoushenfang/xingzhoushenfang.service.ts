@@ -31,6 +31,14 @@ export class XingzhoushenfangService {
     private salesDb: Repository<SalesDB>,
     private connection: Connection,
   ) {}
+  async querySalesDb(params: any) {
+    const data = await this.salesDb.find(params);
+    return data;
+  }
+  async queryNominalPriceDb(params: any) {
+    const data = await this.NominalPriceDb.find(params);
+    return data;
+  }
   async createMany(prices: NominalPriceDto[]) {
     const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
@@ -138,9 +146,9 @@ export class XingzhoushenfangService {
     const result = await this.createCommunityDb(data);
     return result;
   }
-  async queryCommunityFromDb(): Promise<[CommunityDB[], number]> {
+  async queryCommunityFromDb(params = {}): Promise<[CommunityDB[], number]> {
     try {
-      const data = await this.communityDb.findAndCount();
+      const data = await this.communityDb.findAndCount(params);
       return data;
     } catch (error) {
       console.log(error, 'error');
@@ -160,11 +168,16 @@ export class XingzhoushenfangService {
   }
   async updateAllSalesPriceScheduleJob() {
     const data: [CommunityDB[], number] = await this.queryCommunityFromDb();
-    const communityNames = data[0].map((item) =>
-      formatCommunityName(item.communityName),
-    );
+    const communityNames = data[0]
+      .map((item) => formatCommunityName(item.communityName))
+      .reduce((target, curr) => {
+        if (!target.includes(curr)) {
+          target.push(curr);
+        }
+        return target;
+      }, []);
     for (
-      let index = communityNames.indexOf('帝景园');
+      let index = Math.max(communityNames.indexOf('富隆苑'), 0);
       index < communityNames.length;
       index++
     ) {
@@ -173,5 +186,10 @@ export class XingzhoushenfangService {
       console.log(communityNames[index], res);
     }
     console.log('脚本执行完毕');
+  }
+  async tempSalesUpdate() {
+    const res = await getSalesPriceItem({ keyWord: '万象新天' });
+    await this.createManySaleDB(res);
+    console.log(res, 'res');
   }
 }
