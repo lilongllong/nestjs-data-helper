@@ -177,13 +177,17 @@ export class XingzhoushenfangService {
         return target;
       }, []);
     for (
-      let index = Math.max(communityNames.indexOf('富隆苑'), 0);
+      let index = Math.max(communityNames.indexOf('****'), 0);
       index < communityNames.length;
       index++
     ) {
       const res = await getSalesPriceItem({ keyWord: communityNames[index] });
       await this.createManySaleDB(res);
-      console.log(communityNames[index], res);
+      console.log(
+        res,
+        communityNames[index],
+        `进度：${Math.ceil((index / communityNames.length) * 100)} %`,
+      );
     }
     console.log('脚本执行完毕');
   }
