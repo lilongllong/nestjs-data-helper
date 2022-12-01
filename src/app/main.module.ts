@@ -28,6 +28,7 @@ import { LoggerMiddleware } from '../middleware/logger.middleware';
     // 数据库ORM模块
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      name: 'default',
       useFactory: (configService: ConfigService) => {
         const { host, port, username, password, database } =
           configService.get('db');
@@ -43,6 +44,34 @@ import { LoggerMiddleware } from '../middleware/logger.middleware';
           synchronize: true,
         };
       },
+      inject: [ConfigService],
+    }),
+    // 数据库ORM模块
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const { host, port, username, password, database } =
+          configService.get('mongodb');
+        console.log(
+          configService.get('mongodb'),
+          `configService.get('mongodb')`,
+        );
+        return {
+          type: 'mongodb',
+          host,
+          port,
+          username,
+          password,
+          database,
+          // 全局注入是实体
+          entities: [
+            path.resolve(__dirname, './**/entity/*.mongoEntity.{.ts,.js}'),
+          ],
+          authSource: 'admin',
+          synchronize: true,
+        };
+      },
+      name: 'mongoConnection',
       inject: [ConfigService],
     }),
     HomeModule,

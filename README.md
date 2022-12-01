@@ -55,3 +55,20 @@ docker ps -a
 // 重启容器 5e7821a2a06b (镜像运行的id号)
 docker restart 5e7821a2a06b
 ```
+
+## 建立 mongodb 
+安装 mongodb
+```docker pull mongo```
+
+接着启动mongo
+```
+docker run -itd --name mongo -p 27017:27017 mongo --auth
+```
+
+创建用户和密码
+```
+docker exec -it mongo mongosh admin
+// 尝试建立链接
+db.auth('admin', '123456');
+// 返回 { ok: 1 } 即为成功
+```

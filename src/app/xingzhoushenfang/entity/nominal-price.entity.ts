@@ -96,7 +96,7 @@ export class CommunityDB {
   createTime: Date;
 }
 
-@Entity()
+@Entity({ database: 'scon_nest_server' })
 export class SalesDB {
   @PrimaryGeneratedColumn()
   id: number;

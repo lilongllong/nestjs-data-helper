@@ -7,6 +7,7 @@ import {
   CommunityDB,
   SalesDB,
 } from './entity/nominal-price.entity';
+import { SalesMongoDB } from './entity/norminal-price.mongoEntity';
 import {
   getStaredEstateData,
   getAllEstates,
@@ -29,7 +30,10 @@ export class XingzhoushenfangService {
     private communityDb: Repository<CommunityDB>,
     @InjectRepository(SalesDB)
     private salesDb: Repository<SalesDB>,
+    @InjectRepository(SalesMongoDB, 'mongoConnection')
+    private saleMonngoDb: Repository<SalesMongoDB>,
     private connection: Connection,
+    private mongoConnection: Connection,
   ) {}
   async querySalesDb(params: any) {
     const data = await this.salesDb.find(params);
@@ -190,10 +194,5 @@ export class XingzhoushenfangService {
       );
     }
     console.log('脚本执行完毕');
-  }
-  async tempSalesUpdate() {
-    const res = await getSalesPriceItem({ keyWord: '万象新天' });
-    await this.createManySaleDB(res);
-    console.log(res, 'res');
   }
 }
