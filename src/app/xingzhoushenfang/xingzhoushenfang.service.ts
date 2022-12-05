@@ -177,7 +177,7 @@ export class XingzhoushenfangService {
         return target;
       }, []);
     for (
-      let index = Math.max(communityNames.indexOf('富隆苑'), 0);
+      let index = Math.max(communityNames.indexOf('****'), 0);
       index < communityNames.length;
       index++
     ) {
