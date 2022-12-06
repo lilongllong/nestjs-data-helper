@@ -61,7 +61,7 @@ export const getSalesPriceItem = async (params: {
       'User-Agent':
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
     },
-    data: params,
+    params: params,
   });
   if (res.status === 200 && res.data?.errCode === 0) {
     return (res.data.data || []).map((subItem: SalesDto) => {

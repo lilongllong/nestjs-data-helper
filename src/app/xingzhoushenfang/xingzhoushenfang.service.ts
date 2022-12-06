@@ -7,6 +7,7 @@ import {
   CommunityDB,
   SalesDB,
 } from './entity/nominal-price.entity';
+import { ScheduleMarkDB } from './entity/schedule.entity';
 import {
   getStaredEstateData,
   getAllEstates,
@@ -17,8 +18,11 @@ import {
   NominalPriceDto,
   CommunityDto,
   SalesDto,
+  ScheduleMarkDto,
 } from './dto/nominal-price.dto';
 import { formatCommunityName } from 'src/utils/index';
+
+import { HOUSE_VARIABLES } from './constants/index';
 
 @Injectable()
 export class XingzhoushenfangService {
@@ -29,6 +33,8 @@ export class XingzhoushenfangService {
     private communityDb: Repository<CommunityDB>,
     @InjectRepository(SalesDB)
     private salesDb: Repository<SalesDB>,
+    @InjectRepository(ScheduleMarkDB)
+    private scheduleMarkDb: Repository<ScheduleMarkDto>,
     private connection: Connection,
   ) {}
   async querySalesDb(params: any) {
@@ -118,6 +124,30 @@ export class XingzhoushenfangService {
     const result = await this.createMany(formatData);
     return result;
   }
+  async updateScheduleMark(value: Partial<ScheduleMarkDto>) {
+    const existRes = await this.scheduleMarkDb.findOne({ name: value.name });
+    if (existRes) {
+      const res = await this.scheduleMarkDb
+        .createQueryBuilder()
+        .update(ScheduleMarkDB)
+        .set({ mark: value.mark, process: value.process })
+        .where('id = :id', { id: existRes.id })
+        .execute();
+      return res;
+    } else {
+      const scheduleMarkIns = new ScheduleMarkDB();
+      scheduleMarkIns.desc = value.desc || '';
+      scheduleMarkIns.mark = value.mark || '';
+      scheduleMarkIns.name = value.name || '';
+      scheduleMarkIns.process = value.process || 0;
+      const res = await this.scheduleMarkDb
+        .createQueryBuilder()
+        .insert()
+        .values(scheduleMarkIns)
+        .execute();
+      return res;
+    }
+  }
   async createCommunityDb(communities: CommunityDto[]) {
     const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
@@ -145,6 +175,22 @@ export class XingzhoushenfangService {
     const data = await getAllEstates();
     const result = await this.createCommunityDb(data);
     return result;
+  }
+  async queryCommunitySalesData(
+    value: { name: string },
+    options?: { findOne: boolean },
+  ) {
+    if (options?.findOne) {
+      return this.salesDb.findOne({ name: value.name });
+    } else {
+      return this.salesDb.findAndCount({ name: value.name });
+    }
+  }
+  async queryCommunitySalesDataAll(value: { district?: string }) {
+    return this.salesDb
+      .createQueryBuilder()
+      .select('DISTINCT name', 'name')
+      .getRawMany();
   }
   async queryCommunityFromDb(params = {}): Promise<[CommunityDB[], number]> {
     try {
@@ -176,14 +222,38 @@ export class XingzhoushenfangService {
         }
         return target;
       }, []);
+    const markRes = await this.scheduleMarkDb.findOne({
+      name: HOUSE_VARIABLES.xingzhoushenfang.name,
+    });
     for (
-      let index = Math.max(communityNames.indexOf('****'), 0);
+      let index = Math.max(communityNames.indexOf(markRes?.mark), 0);
       index < communityNames.length;
       index++
     ) {
-      const res = await getSalesPriceItem({ keyWord: communityNames[index] });
-      await this.createManySaleDB(res);
-      console.log(communityNames[index], res);
+      // 首先进行查询，非热门小区不进行调整
+      const hasRes = await this.queryCommunitySalesData(
+        { name: communityNames[index] },
+        { findOne: true },
+      );
+      if (hasRes) {
+        const res = await getSalesPriceItem({ keyWord: communityNames[index] });
+        if (res?.length > 0) {
+          await this.createManySaleDB(res);
+          await this.updateScheduleMark({
+            ...HOUSE_VARIABLES.xingzhoushenfang,
+            process: Number(
+              (((index + 1) / communityNames.length) * 100).toFixed(2),
+            ),
+            mark: communityNames[index],
+          });
+          console.log(communityNames[index], res);
+        } else {
+          console.log(communityNames[index], '被拦截, 中断后续请求');
+          break;
+        }
+      } else {
+        console.log(communityNames[index], '低频小区');
+      }
     }
     console.log('脚本执行完毕');
   }

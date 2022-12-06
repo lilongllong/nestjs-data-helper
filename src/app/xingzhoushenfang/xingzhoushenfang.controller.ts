@@ -23,6 +23,20 @@ export class XingzhoushenfangController {
       data: { sales, prices },
     };
   }
+  @Get('community/get')
+  async getCommunityName(
+    @Query() query: { district?: string },
+  ): Promise<{ code: number; data: any }> {
+    // 获得笋盘
+    const communityNames =
+      await this.xingzhoushenfangService.queryCommunitySalesDataAll({
+        district: query.district,
+      });
+    return {
+      code: 0,
+      data: communityNames,
+    };
+  }
   @Get('job/nominal_price')
   async startNominalPriceScheduleJob() {
     this.xingzhoushenfangService.updateAllNominalPriceScheduleJob();

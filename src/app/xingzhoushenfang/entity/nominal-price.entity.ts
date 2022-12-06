@@ -92,6 +92,11 @@ export class CommunityDB {
     type: 'text',
   })
   zoneName: string;
+  @Column({
+    type: 'integer',
+    default: 0,
+  })
+  hot: number;
   @CreateDateColumn()
   createTime: Date;
 }

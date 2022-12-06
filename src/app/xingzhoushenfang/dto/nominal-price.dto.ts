@@ -50,3 +50,12 @@ export class SalesDto {
   unitPrice: number;
   site: string;
 }
+
+export class ScheduleMarkDto {
+  id?: number;
+  desc: string;
+  name: string;
+  mark: string;
+  process: number;
+  updateTime: Date;
+}
