@@ -59,3 +59,9 @@ export class ScheduleMarkDto {
   process: number;
   updateTime: Date;
 }
+
+export interface IHttpRes<T> {
+  code: number;
+  data?: T;
+  message?: string;
+}

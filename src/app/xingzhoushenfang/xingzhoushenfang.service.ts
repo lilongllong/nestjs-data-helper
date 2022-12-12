@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Connection, Repository, Like } from 'typeorm';
 
 import {
   NominalPriceDB,
@@ -22,7 +22,7 @@ import {
 } from './dto/nominal-price.dto';
 import { formatCommunityName } from 'src/utils/index';
 
-import { HOUSE_VARIABLES } from './constants/index';
+import { HOUSE_VARIABLES, IGNORE_COMMUNITY } from './constants/index';
 
 @Injectable()
 export class XingzhoushenfangService {
@@ -94,6 +94,7 @@ export class XingzhoushenfangService {
         if (oldData) {
           continue;
         }
+        console.log('插入', prices);
         const db = new SalesDB();
         db.acreage = item.acreage || 0;
         db.area = item.area || '';
@@ -117,6 +118,12 @@ export class XingzhoushenfangService {
       await queryRunner.release();
     }
     return true;
+  }
+  async querySaleDistrictName() {
+    return this.salesDb
+      .createQueryBuilder()
+      .select('DISTINCT district', 'district')
+      .getMany();
   }
   async queryNominalPriceData() {
     const data = await getStaredEstateData();
@@ -230,6 +237,9 @@ export class XingzhoushenfangService {
       index < communityNames.length;
       index++
     ) {
+      if (IGNORE_COMMUNITY.includes(communityNames[index])) {
+        continue;
+      }
       // 首先进行查询，非热门小区不进行调整
       const hasRes = await this.queryCommunitySalesData(
         { name: communityNames[index] },
@@ -260,6 +270,6 @@ export class XingzhoushenfangService {
   async tempSalesUpdate() {
     const res = await getSalesPriceItem({ keyWord: '万象新天' });
     await this.createManySaleDB(res);
-    console.log(res, 'res');
+    // console.log(res, 'res');
   }
 }

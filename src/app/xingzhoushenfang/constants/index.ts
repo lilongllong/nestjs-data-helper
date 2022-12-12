@@ -30,3 +30,5 @@ export const HOUSE_VARIABLES = {
     desc: '深圳房价小区价格更新进度追踪',
   },
 };
+
+export const IGNORE_COMMUNITY = ['御景东方花园', '书香门第上河坊广场'];
