@@ -31,4 +31,10 @@ export const HOUSE_VARIABLES = {
   },
 };
 
-export const IGNORE_COMMUNITY = ['御景东方花园', '书香门第上河坊广场'];
+export const IGNORE_COMMUNITY = [
+  '御景东方花园',
+  '书香门第上河坊广场',
+  '龙井花园',
+  '龙电花园B区',
+  '城市山谷花园',
+];

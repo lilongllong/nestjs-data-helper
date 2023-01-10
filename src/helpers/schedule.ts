@@ -12,7 +12,7 @@ export const setupSchedule = (app: INestApplication) => {
   const roomService = app.get(XingzhoushenfangService);
   // roomService.updateAllNominalPriceScheduleJob();
   // roomService.queryCommunityData();
-  // roomService.updateAllSalesPriceScheduleJob();
+  roomService.updateAllSalesPriceScheduleJob();
   // roomService.tempSalesUpdate();
   schedule.scheduleJob('0 0 0 * * *', function () {
     // 获取service进行数据保存

@@ -19,8 +19,8 @@ axiosInstance.interceptors.request.use(async (config: AxiosRequestConfig) => {
   const userAgent = new UserAgent();
 
   config.headers = {
-    ...config.headers,
-    'User-Agent': userAgent.toString(),
+    ...(config.headers as any),
+    'User-Agent': userAgent.toString() as any,
   };
   return config;
 });
