@@ -10,7 +10,7 @@ export class LightHouseController {
     @Query() query: { url: string },
     @Res() res: Response,
   ) {
-    const responseHtml = this.lightHouseService.runLigthTask(
+    const responseHtml = await this.lightHouseService.runLigthTask(
       query.url,
       undefined,
     );

@@ -12,7 +12,7 @@ import { config } from '../helpers/config';
 import { HomeModule } from './home/home.module';
 import { CatsModule } from './cats/cats.module';
 import { UsersModule } from './users/users.module';
-// import { LightHouseModule } from './lighthouse/lighthouse.module';
+import { LightHouseModule } from './lighthouse/lighthouse.module';
 import { XingzhoushenfangModule } from './xingzhoushenfang/xingzhoushenfang.module';
 import { CatsLoggerMiddleware } from '../middleware/catsLogger.middleware';
 import { LoggerMiddleware } from '../middleware/logger.middleware';
@@ -50,7 +50,7 @@ import { LoggerMiddleware } from '../middleware/logger.middleware';
     CatsModule,
     UsersModule,
     XingzhoushenfangModule,
-    // LightHouseModule,
+    LightHouseModule,
   ],
   controllers: [],
   providers: [],
