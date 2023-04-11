@@ -90,7 +90,11 @@ export class XingzhoushenfangService {
     try {
       for (let index = 0; index < prices.length; index++) {
         const item = prices[index];
-        const oldData = await this.salesDb.findOne({ ref_id: item.ref_id });
+        const oldData = await this.salesDb.findOne({
+          where: {
+            ref_id: item.ref_id,
+          },
+        });
         if (oldData) {
           continue;
         }
@@ -132,7 +136,11 @@ export class XingzhoushenfangService {
     return result;
   }
   async updateScheduleMark(value: Partial<ScheduleMarkDto>) {
-    const existRes = await this.scheduleMarkDb.findOne({ name: value.name });
+    const existRes = await this.scheduleMarkDb.findOne({
+      where: {
+        name: value.name,
+      },
+    });
     if (existRes) {
       const res = await this.scheduleMarkDb
         .createQueryBuilder()
@@ -188,9 +196,17 @@ export class XingzhoushenfangService {
     options?: { findOne: boolean },
   ) {
     if (options?.findOne) {
-      return this.salesDb.findOne({ name: value.name });
+      return this.salesDb.findOne({
+        where: {
+          name: value.name,
+        },
+      });
     } else {
-      return this.salesDb.findAndCount({ name: value.name });
+      return this.salesDb.findAndCount({
+        where: {
+          name: value.name,
+        },
+      });
     }
   }
   async queryCommunitySalesDataAll(value: { district?: string }) {
@@ -230,7 +246,9 @@ export class XingzhoushenfangService {
         return target;
       }, []);
     const markRes = await this.scheduleMarkDb.findOne({
-      name: HOUSE_VARIABLES.xingzhoushenfang.name,
+      where: {
+        name: HOUSE_VARIABLES.xingzhoushenfang.name,
+      },
     });
     for (
       let index = Math.max(communityNames.indexOf(markRes?.mark), 0);

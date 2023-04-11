@@ -13,8 +13,8 @@ export class UsersService {
   findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
-  findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOne(id);
+  findOne(id: number): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async add(user: UsersDto): Promise<any> {
