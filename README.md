@@ -56,6 +56,13 @@ docker ps -a
 docker restart 5e7821a2a06b
 ```
 
+## docler mongodb
+```bash
+docker pull mongo:latest
+
+docker run -itd --name x-replay -p 27017:27017 mongo
+```
+
 ## 增加 lighthouse 性能实时监控
 由于本项目采用的 CommonJS 的依赖加载机制，lighthouse 的版本必须要在10以下，本项目采用8.0.0版本，请勿升级。
 node的版本采用12版本，19版本项目tcp ipv6无法支持
