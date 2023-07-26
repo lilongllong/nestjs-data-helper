@@ -1,6 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository, Like } from 'typeorm';
+import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import { Model, Connection as MongoConnect, Types } from 'mongoose';
+import { SessionDocument } from './entity/session.schema';
+import SessionDTO from './dto/session.dto';
 
 import {
   NominalPriceDB,
@@ -27,6 +31,10 @@ import { HOUSE_VARIABLES, IGNORE_COMMUNITY } from './constants/index';
 @Injectable()
 export class XingzhoushenfangService {
   constructor(
+    @InjectModel('Session')
+    private readonly session: Model<SessionDocument>,
+    @InjectConnection()
+    private readonly mongoConnection: MongoConnect,
     @InjectRepository(NominalPriceDB)
     private NominalPriceDb: Repository<NominalPriceDB>,
     @InjectRepository(CommunityDB)
@@ -37,12 +45,23 @@ export class XingzhoushenfangService {
     private scheduleMarkDb: Repository<ScheduleMarkDto>,
     private connection: Connection,
   ) {}
+  async createSession(sessionDTO: SessionDTO) {
+    const sessionEntity = await this.session.create(sessionDTO);
+    return { sessionId: sessionEntity?._id };
+  }
+  async getSessions() {
+    return this.mongoConnection
+      .collection('sessions')
+      .find({})
+      .sort({ timestamp: -1 })
+      .toArray();
+  }
   async querySalesDb(params: any) {
-    const data = await this.salesDb.find(params);
+    const data = await this.salesDb.find({ where: params });
     return data;
   }
   async queryNominalPriceDb(params: any) {
-    const data = await this.NominalPriceDb.find(params);
+    const data = await this.NominalPriceDb.find({ where: params });
     return data;
   }
   async createMany(prices: NominalPriceDto[]) {
@@ -217,7 +236,7 @@ export class XingzhoushenfangService {
   }
   async queryCommunityFromDb(params = {}): Promise<[CommunityDB[], number]> {
     try {
-      const data = await this.communityDb.findAndCount(params);
+      const data = await this.communityDb.findAndCount({ where: params });
       return data;
     } catch (error) {
       console.log(error, 'error');

@@ -15,10 +15,14 @@ export class XingzhoushenfangController {
   constructor(
     private readonly xingzhoushenfangService: XingzhoushenfangService,
   ) {}
+  @Get('price/get')
+  async getPriceFromMongodb() {
+    await this.xingzhoushenfangService.createSession({});
+    const data = await this.xingzhoushenfangService.getSessions();
+    return { code: 0, data };
+  }
   @Get('sunpan/get')
-  async getSunpan(
-    @Query() query: { name: string },
-  ): Promise<IHttpRes<any>> {
+  async getSunpan(@Query() query: { name: string }): Promise<IHttpRes<any>> {
     // 获得笋盘
     const sales = await this.xingzhoushenfangService.querySalesDb({
       name: Like(`%${query.name}%`),

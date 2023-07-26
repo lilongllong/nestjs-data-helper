@@ -8,6 +8,7 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { config } from '../helpers/config';
 import { HomeModule } from './home/home.module';
 import { CatsModule } from './cats/cats.module';
@@ -51,6 +52,7 @@ import { LoggerMiddleware } from '../middleware/logger.middleware';
     UsersModule,
     XingzhoushenfangModule,
     LightHouseModule,
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/x-replay'),
   ],
   controllers: [],
   providers: [],

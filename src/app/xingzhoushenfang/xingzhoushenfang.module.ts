@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
+import { SessionSchema } from './entity/session.schema';
 
 import {
   NominalPriceDB,
@@ -19,6 +21,7 @@ import { XingzhoushenfangController } from './xingzhoushenfang.controller';
       SalesDB,
       ScheduleMarkDB,
     ]),
+    MongooseModule.forFeature([{ name: 'Session', schema: SessionSchema }]),
   ],
   providers: [XingzhoushenfangService, NominalPriceSubscriber],
   controllers: [XingzhoushenfangController],
