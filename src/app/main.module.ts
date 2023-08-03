@@ -52,7 +52,14 @@ import { LoggerMiddleware } from '../middleware/logger.middleware';
     UsersModule,
     XingzhoushenfangModule,
     LightHouseModule,
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/x-replay'),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/nest-data', {
+      /** multi connect for mongodb */
+      // connectionName: 'x_replay',
+    }),
+    // MongooseModule.forRoot('mongodb://127.0.0.1:27017/nest-data', {
+    //   /** multi connect for mongodb */
+    //   // connectionName: 'nest_data',
+    // }),
   ],
   controllers: [],
   providers: [],

@@ -61,6 +61,8 @@ docker restart 5e7821a2a06b
 docker pull mongo:latest
 
 docker run -itd --name x-replay -p 27017:27017 mongo
+docker run -itd --name nest-data -p 27018:27018 mongo
+
 ```
 
 ## 增加 lighthouse 性能实时监控

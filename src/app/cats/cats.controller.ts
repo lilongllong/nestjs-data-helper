@@ -15,11 +15,11 @@ import {
 import { Request, Response as ResponseType } from 'express';
 import { CatsCreateDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
-import { ICat } from './interfaces/cats.interface';
 import { HomeService } from '../home/home.service';
 import { ForbiddenException } from '../../exceptions/forbidden.exception';
 import { HttpExceptionFilter } from '../../filters/http-exception.filter';
 import { TimeValidationPipe } from '../../pipes/time.validation.pipe';
+import { Cat, ICat } from './schema/cat.schema';
 // import { JoiValidationPipe } from '../pipes/joi.validationPipe';
 
 @Controller('cats')
@@ -40,8 +40,29 @@ export class CatsController {
   }
 
   @Get('findAll')
-  findAll(@Query('id', ParseIntPipe) id: number): ICat[] {
-    return this.catService.findAll();
+  async findAll(@Query('id', ParseIntPipe) id: number): Promise<Cat[]> {
+    const res = await this.catService.findAll();
+    return res;
+  }
+
+  @Get('triggerCat')
+  async triggerCat(): Promise<Cat[]> {
+    const data = await this.catService.createParentCat({
+      name: '李隆隆',
+      sex: 'male',
+      metaData: { firstName: 'Li', lastName: 'LongLong' },
+    });
+    await this.catService.insertChildCat(
+      {
+        name: '李南希',
+        sex: 'female',
+        metaData: { firstName: 'Li', lastName: 'NaXi' },
+        children: [],
+      },
+      data.id,
+    );
+    const res = await this.catService.findAll();
+    return res;
   }
 
   @Get('findOne/:id')

@@ -21,7 +21,10 @@ import { XingzhoushenfangController } from './xingzhoushenfang.controller';
       SalesDB,
       ScheduleMarkDB,
     ]),
-    MongooseModule.forFeature([{ name: 'Session', schema: SessionSchema }]),
+    MongooseModule.forFeature(
+      [{ name: 'Session', schema: SessionSchema }],
+      // 'nest_data',
+    ),
   ],
   providers: [XingzhoushenfangService, NominalPriceSubscriber],
   controllers: [XingzhoushenfangController],
