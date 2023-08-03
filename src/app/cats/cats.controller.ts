@@ -65,6 +65,26 @@ export class CatsController {
     return res;
   }
 
+  @Get('insertCat')
+  async insertCat(): Promise<any> {
+    const res = await this.catService.insertChildCatCollection(
+      {
+        name: '李启润',
+        sex: 'male',
+        metaData: { firstName: 'Li', lastName: 'QiRun' },
+        children: [],
+      },
+      '64cb20e4b4fe8c37441d185c',
+    );
+    return res;
+  }
+
+  @Get('resetCat')
+  async resetCat(): Promise<any> {
+    const res = await this.catService.resetCats();
+    return res;
+  }
+
   @Get('findOne/:id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<{
     retcode: number;

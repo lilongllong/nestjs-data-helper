@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Model, Connection } from 'mongoose';
 import { Cat, CatDocument, ICat } from './schema/cat.schema';
 import { InjectModel, Schema as schema } from '@nestjs/mongoose';
 import { CatsCreateDto } from './dto/cats.dto';
-import { Type } from 'class-transformer';
+
+const CATS_PREFIX = 'CAT';
 
 @Injectable()
 export class CatsService {
   private readonly cats: any[] = [];
   @InjectModel(Cat.name)
   private readonly catModel: Model<Cat>;
+  @InjectConnection()
+  private readonly connection: Connection;
   async create(cat: any) {
     this.cats.push(cat);
   }
@@ -32,6 +36,21 @@ export class CatsService {
     }
     return await data.save();
   }
+  async insertChildCatCollection(cat: CatsCreateDto, id: string): Promise<any> {
+    return this.connection
+      .collection(`${CATS_PREFIX}_${id}`, {
+        storageEngine: {
+          wiredTiger: { configString: 'block_compressor=zlib' },
+        },
+      })
+      .insertOne({
+        name: cat.name,
+        sex: cat.sex,
+        metaData: cat.metaData,
+        children: cat.children || [],
+        updated: Date.now(),
+      });
+  }
   async createParentCat(cat: CatsCreateDto): Promise<Cat> {
     const createCat = new this.catModel({
       name: cat.name,
@@ -41,5 +60,8 @@ export class CatsService {
       updated: Date.now(),
     });
     return createCat.save();
+  }
+  async resetCats() {
+    return await this.catModel.deleteMany({});
   }
 }
