@@ -18,7 +18,7 @@ import { XingzhoushenfangModule } from './xingzhoushenfang/xingzhoushenfang.modu
 import { CatsLoggerMiddleware } from '../middleware/catsLogger.middleware';
 import { LoggerMiddleware } from '../middleware/logger.middleware';
 import { PageModule } from './page/page.module';
-import { PuppeteerModule } from './puppeteer/puppeteer.module';
+import { MinioModule } from './minio/minio.module';
 
 @Module({
   imports: [
@@ -58,8 +58,8 @@ import { PuppeteerModule } from './puppeteer/puppeteer.module';
     UsersModule,
     XingzhoushenfangModule,
     LightHouseModule,
-    // PuppeteerModule,
     PageModule,
+    MinioModule,
     MongooseModule.forRootAsync({
       useFactory: (cfg: ConfigService) => ({
         uri: cfg.get('MONGO_URL'),
