@@ -4,7 +4,6 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { setupSwagger } from './helpers/swagger';
 import { getConfig } from './helpers/config';
 import { setupSchedule } from './helpers/schedule';
-import { exec } from './utils/index';
 // import { LoggerMiddleware } from './middleware/logger.middleware';
 
 async function bootstrap() {
