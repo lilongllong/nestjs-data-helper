@@ -56,7 +56,7 @@ docker ps -a
 docker restart 5e7821a2a06b
 ```
 
-## docler mongodb
+## docker mongodb
 ```bash
 docker pull mongo:latest
 
@@ -64,6 +64,20 @@ docker run -itd --name x-replay -p 27017:27017 mongo
 docker run -itd --name nest-data -p 27018:27018 mongo
 
 ```
+
+## docker minio
+```
+docker pull minio:minio
+
+docker run -d  -p 9000:9000 -p 9001:9001 --name minio -v /Users/lilonglong/minio/data:/data -e "MINIO_ROOT_USER=minio" -e "MINIO_ROOT_PASSWORD=12345678"  minio/minio server /data --console-address ":9001"
+```
+
+## puppeteer
+本项目puppeteer运行需要依赖本地 chrome 浏览器，配置地址如下
+```
+executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+```
+
 
 ## 增加 lighthouse 性能实时监控
 由于本项目采用的 CommonJS 的依赖加载机制，lighthouse 的版本必须要在10以下，本项目采用8.0.0版本，请勿升级。
