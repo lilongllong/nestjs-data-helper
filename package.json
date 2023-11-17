@@ -1,7 +1,7 @@
 {
   "name": "nest-js-demo",
   "version": "0.0.1",
-  "description": "",
+  "description": "NestJS标准后台服务模版，基于 MySQL、Mongose、Minio等存储服务，使用 Puppeteer、lighthouse 等工具实现后台服务。",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
