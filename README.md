@@ -1,4 +1,8 @@
 
+# NestJS Data Helper
+
+NestJS标准后台服务模版，基于 MySQL、Mongose、Minio等存储服务，使用 Puppeteer、lighthouse 等工具实现后台服务。
+
 ## Installation
 
 ```bash
@@ -86,6 +90,3 @@ node的版本采用12版本，19版本项目tcp ipv6无法支持
 ## 短期的房地产数据分析
 数据库文件是在 dataBackUp/MySQL 下，有需自取
 
-
-## nosql 集成
-目前nest对于不同类型的数据库兼容，本人学习不够还在研究中。
