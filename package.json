@@ -40,6 +40,7 @@
     "minio": "^7.1.1",
     "mongoose": "^7.3.0",
     "mysql2": "^2.2.5",
+    "nestjs-form-data": "^1.9.6",
     "nestjs-minio-module": "^2.1.1",
     "node-schedule": "^2.1.0",
     "puppeteer": "^19.11.1",
